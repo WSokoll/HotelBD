@@ -1,8 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, DateTimeField, IntegerField
-from wtforms.validators import InputRequired, Length, Regexp, Email, NumberRange
+from wtforms import StringField
+from wtforms.validators import InputRequired, Length, Regexp, Email
 
-from app.validators import AfterStartValidator
 
 LETTERS_REGEXP = r'^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'
 PH_NUM_MESS = 'Number should look like YYYYXXXXXXXXX,' \
@@ -16,14 +15,3 @@ class EmployeePersonalForm(FlaskForm):
     tel_number = StringField('Phone number', validators=[InputRequired(), Regexp(r'^[0-9]{13}$', message=PH_NUM_MESS)])
     email = StringField('Email', validators=[InputRequired(), Length(max=100), Email()])
     position = StringField('Position', validators=[InputRequired()], render_kw={'readonly': True})
-
-
-class RoomReservationForm(FlaskForm):
-    room_number = SelectField('Room number', validators=[InputRequired()])
-    start_date = DateTimeField('Start date', validators=[InputRequired()])
-    end_date = DateTimeField('End date', validators=[InputRequired(), AfterStartValidator()])
-    num_of_people = IntegerField('Number of people', validators=[InputRequired(), NumberRange(min=1, max=20)])
-
-
-class EquipmentReservationFrom(FlaskForm):
-    pass
