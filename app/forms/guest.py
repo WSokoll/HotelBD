@@ -14,7 +14,7 @@ PH_NUM_MESS = 'Number should look like YYYYXXXXXXXXX,' \
 class GuestPersonalForm(FlaskForm):
     first_name = StringField('First Name', validators=[InputRequired(), Length(max=255), Regexp(LETTERS_REGEXP)])
     last_name = StringField('Last Name', validators=[InputRequired(), Length(max=255), Regexp(LETTERS_REGEXP)])
-    age = StringField('Age', validators=[Length(min=1, max=3), Regexp(r'^[1-9]$|^[1-9][0-9]*$')])
+    age = IntegerField('Age', validators=[InputRequired, NumberRange(min=18, max=130)])
     tel_number = StringField('Phone number', validators=[InputRequired(), Regexp(r'^[0-9]{13}$', message=PH_NUM_MESS)])
     email = StringField('Email', validators=[InputRequired(), Length(max=100), Email()])
 
