@@ -47,11 +47,15 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#">Home</a>
                         </li>
-{#                        {% if current_user.is_authenticated %}#}
-{#                        <li class="nav-item">#}
-{#                            <a class="nav-link" href="{{ url_for('bp_auth.logout') }}" tabindex="-1">Wyloguj się</a>#}
-{#                        </li>#}
-{#                        {% endif %}#}
+                        {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.logout') }}" tabindex="-1">Log out</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('auth.login') }}" tabindex="-1">Log in</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

@@ -1,9 +1,14 @@
+from flask_login import UserMixin
+
 from app.app import db
 
 
-class Users(db.Model):
+class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     __table_args__ = {'extend_existing': True}
+
+    def __repr__(self):
+        return self.login
 
 
 class Guests(db.Model):

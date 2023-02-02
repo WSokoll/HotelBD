@@ -1,0 +1,28 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+
+    <div class="container text-center col-3 mx-auto rounded">
+      <main class="form-signin">
+      <form method="POST" action="{{ url_for('auth.login') }}">
+        <img class="mb-4 mt-2 rounded" src="{{ url_for('static', filename = 'img/telewallet-logo-slim.png') }}" alt="" >
+        <h1 class="h3 mb-3 fw-normal">Login</h1>
+
+        {{ form.csrf_token }}
+
+        <div class="form-floating mb-3">
+          {{ form.login(class_="form-control", id_="floatingInput", type_="login") }}
+          <label for="floatingInput">username</label>
+        </div>
+
+        <div class="form-floating">
+          {{ form.password(class_="form-control", id_="floatingPassword", type_="password") }}
+          <label for="floatingPassword">password</label>
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-primary mt-4 mb-2">Log In</button>
+      </form>
+      </main>
+    </div>
+
+{% endblock %}

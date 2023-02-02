@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+login_manager = LoginManager()
 
 
 def create_app():
@@ -24,8 +26,21 @@ def create_app():
     with app.app_context():
         db.reflect()
 
+    # Init flask login
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    from app.models import Users
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return Users.query.filter_by(id=int(user_id)).first()
+
     # Register blueprints
     from app.views.home import bp as bp_home
     app.register_blueprint(bp_home)
+
+    from app.views.auth import bp as bp_auth
+    app.register_blueprint(bp_auth)
 
     return app
