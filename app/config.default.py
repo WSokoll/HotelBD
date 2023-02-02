@@ -3,4 +3,10 @@
 
 SECRET_KEY = 'dev'
 
+DB_HOST = 'localhost'
+DB_PORT = 5432
+DB_NAME = 'db_name'
+DB_USER = 'db_user'
+DB_PASSWORD = 'db_password'
+
 SQLALCHEMY_TRACK_MODIFICATIONS = False

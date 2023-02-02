@@ -1,4 +1,7 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 
 def create_app():
@@ -11,6 +14,15 @@ def create_app():
 
     app.config.from_pyfile('config.default.py')
     app.config.from_pyfile('../local/config.local.py')
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = (f"postgresql://{app.config['DB_USER']}:{app.config['DB_PASSWORD']}"
+                                             f"@{app.config['DB_HOST']}:{app.config['DB_PORT']}"
+                                             f"/{app.config['DB_NAME']}")
+
+    db.init_app(app)
+
+    with app.app_context():
+        db.reflect()
 
     # Register blueprints
     from app.views.home import bp as bp_home
