@@ -1,5 +1,15 @@
 {% extends "base.jinja" %}
 
 {% block content %}
-  HOME
+
+  {% if not current_user.is_authenticated %}
+    <h2 class="text-center">Welcome!</h2>
+    <h3 class="text-center">Please <a href="{{ url_for('auth.login') }}">log in</a> to use the service.</h3>
+
+  {% elif current_user.guest_id != none %}
+
+  {% elif current_user.employee_id != none %}
+
+  {% endif %}
+
 {% endblock %}
