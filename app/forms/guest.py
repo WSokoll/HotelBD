@@ -26,5 +26,8 @@ class RoomReservationForm(FlaskForm):
     num_of_people = IntegerField('Number of people', validators=[InputRequired(), NumberRange(min=1, max=20)])
 
 
-class EquipmentReservationFrom(FlaskForm):
-    pass
+class EquipmentReservationForm(FlaskForm):
+    eq_category = SelectField('Category', validators=[InputRequired()])
+    eq_name = SelectField('Equipment', validators=[InputRequired()])
+    start_date = DateTimeField('Start date', validators=[InputRequired()])
+    end_date = DateTimeField('End date', validators=[InputRequired(), AfterStartValidator()])
