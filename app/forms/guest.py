@@ -2,8 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, IntegerField, DateField
 from wtforms.validators import InputRequired, Length, Regexp, Email, NumberRange
 
-from app.validators import AfterStartValidator
-
+from app.validators import AfterStartValidator, NotPastValidator
 
 LETTERS_REGEXP = r'^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'
 PH_NUM_MESS = 'Number should look like YYXXXXXXXXX,' \
@@ -21,13 +20,13 @@ class GuestPersonalForm(FlaskForm):
 
 class RoomReservationForm(FlaskForm):
     room_number = SelectField('Room number', validators=[InputRequired()], choices=[])
-    start_date = DateField('Start date', validators=[InputRequired()])
-    end_date = DateField('End date', validators=[InputRequired(), AfterStartValidator()])
+    start_date = DateField('Start date', validators=[InputRequired(), NotPastValidator()])
+    end_date = DateField('End date', validators=[InputRequired(), AfterStartValidator(), NotPastValidator()])
     num_of_people = IntegerField('Number of people', validators=[InputRequired(), NumberRange(min=1, max=20)])
 
 
 class EquipmentReservationForm(FlaskForm):
     eq_category = SelectField('Category', validators=[InputRequired()], choices=[])
     eq_name = SelectField('Equipment', validators=[InputRequired()], choices=[])
-    start_date = DateField('Start date', validators=[InputRequired()])
-    end_date = DateField('End date', validators=[InputRequired(), AfterStartValidator()])
+    start_date = DateField('Start date', validators=[InputRequired(), NotPastValidator()])
+    end_date = DateField('End date', validators=[InputRequired(), AfterStartValidator(), NotPastValidator()])
