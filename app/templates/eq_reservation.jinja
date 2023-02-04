@@ -1,0 +1,77 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+  <div class="justify-content-center row">
+  <div class="col-4">
+    <div class="card text-center mx-3 my-3">
+      <div class="card-header">
+        <h3 class="card-title">Equipment reservation</h3>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('eq_reservation.get_post') }}">
+          {{ eq_res_form.csrf_token }}
+
+          <div class="form-floating mb-3">
+            {{ eq_res_form.eq_category(class_="form-control", id_="eq_category") }}
+            <label for="floatingInput">Category</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ eq_res_form.eq_name(class_="form-control", id_="eq_name") }}
+            <label for="floatingPassword">Equipment</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ eq_res_form.start_date(class_="form-control") }}
+            <label for="floatingPassword">Start date</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ eq_res_form.end_date(class_="form-control") }}
+            <label for="floatingPassword">End date</label>
+          </div>
+
+          <button type="submit" class="btn btn-lg btn-primary mt-4 mb-2">Make a reservation</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $().ready(function () {
+      let eqCategorySelect = document.getElementById('eq_category');
+      let eqNameSelect = document.getElementById('eq_name');
+
+      fetch('/equipment/' + eqCategorySelect.value.toLowerCase()).then(function (response) {
+        response.json().then(function (data) {
+          let optionHTML = '';
+
+          for (let eq of data.equipment_list) {
+              optionHTML += '<option value="' + eq + '">' + eq + '</option>';
+          }
+
+          eqNameSelect.innerHTML = optionHTML;
+        })
+      });
+
+      eqCategorySelect.onchange = function () {
+        let category = eqCategorySelect.value;
+
+        fetch('/equipment/' + category.toLowerCase()).then(function (response) {
+          response.json().then(function (data) {
+            let optionHTML = '';
+
+            for (let eq of data.equipment_list) {
+                optionHTML += '<option value="' + eq + '">' + eq + '</option>';
+            }
+
+            eqNameSelect.innerHTML = optionHTML;
+          })
+        });
+      }
+    });
+</script>
+{% endblock %}

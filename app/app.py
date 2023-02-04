@@ -49,4 +49,7 @@ def create_app():
     from app.views.room_reservation import bp as bp_room_reservation
     app.register_blueprint(bp_room_reservation)
 
+    from app.views.eq_reservation import bp as bp_eq_reservation
+    app.register_blueprint(bp_eq_reservation)
+
     return app
