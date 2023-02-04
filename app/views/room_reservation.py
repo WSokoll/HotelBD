@@ -1,5 +1,5 @@
 from flask import Blueprint, abort, flash, render_template, redirect, url_for
-from flask_login import current_user
+from flask_login import current_user, login_required
 from sqlalchemy import and_
 
 from app.app import db
@@ -10,6 +10,7 @@ bp = Blueprint('room_reservation', __name__, template_folder='templates')
 
 
 @bp.route('/guest/room/reservation', methods=['GET', 'POST'])
+@login_required
 def get_post():
     if not current_user.is_authenticated or current_user.guest_id is None:
         abort(401)
@@ -36,11 +37,11 @@ def get_post():
                 reserved = True
 
         if not room:
-            flash('Invalid room number.')
+            flash('Invalid room number.', 'error')
         elif room_res_form.num_of_people.data > room.capacity:
-            flash('Number of people exceeds room capacity.')
+            flash('Number of people exceeds room capacity.', 'error')
         elif reserved:
-            flash('Room not available on the selected dates.')
+            flash('Room not available on the selected dates.', 'error')
         else:
             room_reservation = RoomReservations(
                 guest_id=current_user.id,

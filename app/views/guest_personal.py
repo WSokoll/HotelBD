@@ -9,6 +9,7 @@ bp = Blueprint('guest_personal', __name__, template_folder='templates')
 
 
 @bp.route('/guest/personal', methods=['GET', 'POST'])
+@login_required
 def get_post():
     if not current_user.is_authenticated or current_user.guest_id is None:
         abort(401)
