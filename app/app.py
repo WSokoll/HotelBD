@@ -43,4 +43,7 @@ def create_app():
     from app.views.auth import bp as bp_auth
     app.register_blueprint(bp_auth)
 
+    from app.views.guest_personal import bp as bp_guest_personal
+    app.register_blueprint(bp_guest_personal)
+
     return app
