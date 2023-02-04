@@ -46,4 +46,7 @@ def create_app():
     from app.views.guest_personal import bp as bp_guest_personal
     app.register_blueprint(bp_guest_personal)
 
+    from app.views.room_reservation import bp as bp_room_reservation
+    app.register_blueprint(bp_room_reservation)
+
     return app
