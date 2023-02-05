@@ -1,0 +1,45 @@
+{% extends "base.jinja" %}
+
+{% block content %}
+  <div class="justify-content-center row">
+  <div class="col-4">
+    <div class="card text-center mx-3 my-3">
+      <div class="card-header">
+        <h3 class="card-title">Personal information</h3>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="{{ url_for('employee_personal.get_post') }}">
+          {{ employee_personal_form.csrf_token }}
+
+          <div class="form-floating mb-3">
+            {{ employee_personal_form.first_name(class_="form-control") }}
+            <label for="floatingInput">First name</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ employee_personal_form.last_name(class_="form-control") }}
+            <label for="floatingInput">Last name</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ employee_personal_form.email(class_="form-control") }}
+            <label for="floatingInput">Email</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            {{ employee_personal_form.tel_number(class_="form-control") }}
+            <label for="floatingInput">Phone number</label>
+          </div>
+
+          <div class="form-floating">
+            {{ employee_personal_form.position(class_="form-control") }}
+            <label for="floatingInput">Position</label>
+          </div>
+
+          <button type="submit" class="btn btn-lg btn-primary mt-4 mb-2">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %}

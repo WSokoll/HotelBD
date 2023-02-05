@@ -52,4 +52,7 @@ def create_app():
     from app.views.eq_reservation import bp as bp_eq_reservation
     app.register_blueprint(bp_eq_reservation)
 
+    from app.views.employee_personal import bp as bp_employee_personal
+    app.register_blueprint(bp_employee_personal)
+
     return app
