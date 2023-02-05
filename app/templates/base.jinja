@@ -56,6 +56,21 @@
                             <a class="nav-link" href="{{ url_for('auth.login') }}" tabindex="-1">Log in</a>
                         </li>
                         {% endif %}
+                        {% if current_user.is_authenticated and current_user.guest_id != none %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('guest_personal.get_post') }}" tabindex="-1">Personal information</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('room_reservation.get_post') }}" tabindex="-1">Room reservation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('eq_reservation.get_post') }}" tabindex="-1">Equipment reservation</a>
+                        </li>
+                        {% elif current_user.is_authenticated and current_user.employee_id != none %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('employee_personal.get_post') }}" tabindex="-1">Personal information</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
