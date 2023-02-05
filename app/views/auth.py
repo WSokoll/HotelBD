@@ -38,7 +38,7 @@ def login():
             login_user(user)
             flash('Logged in successfully')
 
-            return redirect(url_for('home.get_post'))
+            return redirect(url_for('home.get'))
         else:
             flash('Invalid login details')
             return render_template('login.jinja', form=form)
@@ -55,4 +55,4 @@ def login():
 @bp.route('/logout', methods=['GET'])
 def logout():
     logout_user()
-    return redirect(url_for('home.get_post'))
+    return redirect(url_for('home.get'))

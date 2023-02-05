@@ -35,6 +35,8 @@ def get_post():
             for err in errors:
                 flash(f"{guest_personal_form._fields[field_name].label.text}: {err}", 'error')
 
+        return render_template('guest_personal.jinja', guest_personal_form=guest_personal_form)
+
     guest_personal_form.first_name.data = guest.first_name
     guest_personal_form.last_name.data = guest.last_name
     guest_personal_form.age.data = guest.age
