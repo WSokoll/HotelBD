@@ -8,8 +8,99 @@
 
   {% elif current_user.guest_id != none %}
 
+    <div class="justify-content-center row">
+    <div class="col-4">
+      <div class="card text-center mx-3 my-3">
+        <div class="card-header">
+          <h3 class="card-title">Room reservations</h3>
+        </div>
+        <div class="card-body">
+           <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Room number</th>
+                <th scope="col">Start date</th>
+                <th scope="col">End date</th>
+                <th scope="col">Num. of people</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in room_res_list %}
+                <tr>
+                  <td>{{ item.room_number }}</td>
+                  <td>{{ item.start_date }}</td>
+                  <td>{{ item.end_date }}</td>
+                  <td>{{ item.num_of_people }}</td>
+                  <td>{{ item.price }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-4">
+      <div class="card text-center mx-3 my-3">
+        <div class="card-header">
+          <h3 class="card-title">Equipment reservations</h3>
+        </div>
+        <div class="card-body">
+           <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Equipment</th>
+                <th scope="col">Start date</th>
+                <th scope="col">End date</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in eq_res_list %}
+                <tr>
+                  <td>{{ item.equipment }}</td>
+                  <td>{{ item.start_date }}</td>
+                  <td>{{ item.end_date }}</td>
+                  <td>{{ item.price }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+
   {% elif current_user.employee_id != none %}
-
+    <div class="justify-content-center row">
+    <div class="col-4">
+      <div class="card text-center mx-3 my-3">
+        <div class="card-header">
+          <h3 class="card-title">Tasks</h3>
+        </div>
+        <div class="card-body">
+           <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Room number</th>
+                <th scope="col">Task</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in tasks %}
+                <tr>
+                  <td>{{ item.room_number }}</td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.description }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
   {% endif %}
-
 {% endblock %}
