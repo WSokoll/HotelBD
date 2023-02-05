@@ -71,6 +71,11 @@
                             <a class="nav-link" href="{{ url_for('employee_personal.get_post') }}" tabindex="-1">Personal information</a>
                         </li>
                         {% endif %}
+                        {% if current_user.is_authenticated and current_user.employee_id != none and is_admin == True %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.index') }}" tabindex="-1">ADMIN PANEL</a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>

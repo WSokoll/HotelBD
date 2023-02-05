@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Blueprint, render_template
 from flask_login import current_user
 
-from app.models import RoomReservations, Rooms, EqReservations, Equipment, Tasks
+from app.models import RoomReservations, Rooms, EqReservations, Equipment, Tasks, Employees
 
 bp = Blueprint('home', __name__, template_folder='templates')
 
@@ -11,6 +11,7 @@ bp = Blueprint('home', __name__, template_folder='templates')
 @bp.route('/home', methods=['GET'])
 @bp.route('/', methods=['GET'])
 def get():
+    admin_check = False
 
     if current_user.is_authenticated and current_user.guest_id is not None:
         room_res = RoomReservations.query.filter_by(guest_id=current_user.id).all()
@@ -42,7 +43,7 @@ def get():
             }
             eq_res_list.append(res_element)
 
-        return render_template('home.jinja', room_res_list=room_res_list, eq_res_list=eq_res_list)
+        return render_template('home.jinja', room_res_list=room_res_list, eq_res_list=eq_res_list, admin_check=admin_check)
 
     elif current_user.is_authenticated and current_user.employee_id is not None:
         tasks = Tasks.query.filter_by(employee_id=current_user.employee_id).all()
@@ -58,6 +59,10 @@ def get():
             }
             list_of_tasks.append(task_element)
 
-        return render_template('home.jinja', tasks=list_of_tasks)
+        employee = Employees.query.filter_by(id=current_user.employee_id).one_or_none()
+        if employee and (employee.position_id == 1 or employee.position_id == 2):
+            admin_check = True
 
-    return render_template('home.jinja')
+        return render_template('home.jinja', tasks=list_of_tasks, admin_check=admin_check)
+
+    return render_template('home.jinja', admin_check=admin_check)
