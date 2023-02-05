@@ -20,12 +20,6 @@ def get_post():
 
     guest_personal_form = GuestPersonalForm()
 
-    guest_personal_form.first_name.data = guest.first_name
-    guest_personal_form.last_name.data = guest.last_name
-    guest_personal_form.age.data = guest.age
-    guest_personal_form.tel_number.data = guest.tel_number
-    guest_personal_form.email.data = guest.email
-
     if guest_personal_form.validate_on_submit():
         guest.first_name = guest_personal_form.first_name.data
         guest.last_name = guest_personal_form.last_name.data
@@ -40,5 +34,11 @@ def get_post():
         for field_name, errors in guest_personal_form.errors.items():
             for err in errors:
                 flash(f"{guest_personal_form._fields[field_name].label.text}: {err}", 'error')
+
+    guest_personal_form.first_name.data = guest.first_name
+    guest_personal_form.last_name.data = guest.last_name
+    guest_personal_form.age.data = guest.age
+    guest_personal_form.tel_number.data = guest.tel_number
+    guest_personal_form.email.data = guest.email
 
     return render_template('guest_personal.jinja', guest_personal_form=guest_personal_form)
