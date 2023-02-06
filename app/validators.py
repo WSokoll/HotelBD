@@ -12,7 +12,7 @@ class AfterStartValidator:
         self.message = message
 
     def __call__(self, form, field):
-        if field.data < form.start_date.data:
+        if field.data <= form.start_date.data:
             raise ValidationError(
                 self.message
                 or field.gettext(
