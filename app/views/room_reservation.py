@@ -31,9 +31,9 @@ def get_post():
                     RoomReservations.start_date < room_res_form.end_date.data,
                     RoomReservations.end_date > room_res_form.start_date.data
                 )
-            )).all()
+            )).count()
 
-            if reservations:
+            if reservations > 0:
                 reserved = True
 
         if not room:

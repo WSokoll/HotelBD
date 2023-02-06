@@ -14,7 +14,7 @@ def get():
     admin_check = False
 
     if current_user.is_authenticated and current_user.guest_id is not None:
-        room_res = RoomReservations.query.filter_by(guest_id=current_user.id).all()
+        room_res = RoomReservations.query.filter_by(guest_id=current_user.id).order_by(RoomReservations.start_date).all()
         room_res_list = []
 
         for res in room_res:
@@ -29,7 +29,7 @@ def get():
             }
             room_res_list.append(res_element)
 
-        eq_res = EqReservations.query.filter_by(guest_id=current_user.id).all()
+        eq_res = EqReservations.query.filter_by(guest_id=current_user.id).order_by(EqReservations.start_date).all()
         eq_res_list = []
 
         for res in eq_res:
@@ -59,8 +59,8 @@ def get():
             }
             list_of_tasks.append(task_element)
 
-        employee = Employees.query.filter_by(id=current_user.employee_id).one_or_none()
-        if employee and (employee.position_id == 1 or employee.position_id == 2):
+        position = Employees.query.with_entities(Employees.position_id).filter_by(id=current_user.employee_id).one_or_none()
+        if position and position[0] in [1, 2]:
             admin_check = True
 
         return render_template('home.jinja', tasks=list_of_tasks, admin_check=admin_check)

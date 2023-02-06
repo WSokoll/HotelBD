@@ -111,8 +111,8 @@ def admin_panel_init(admin, db):
         def get_url(self):
             return url_for("home.get")
 
-    admin.add_link(LogoutLink(name="Wyloguj się"))
-    admin.add_link(HomePageLink(name="Konto"))
+    admin.add_link(LogoutLink(name="Log out"))
+    admin.add_link(HomePageLink(name="Home"))
 
     admin.add_view(EmployeesModelView(app.models.Employees, db.session, name='Employees'))
     admin.add_view(TasksModelView(app.models.Tasks, db.session, name='Tasks'))

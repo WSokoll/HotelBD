@@ -27,6 +27,9 @@ class CustomAdminIndexView(AdminIndexView):
             else:
                 return redirect(url_for('auth.login'))
 
+    def is_visible(self):
+        return False
+
 
 db = SQLAlchemy()
 login_manager = LoginManager()

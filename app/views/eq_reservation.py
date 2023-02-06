@@ -34,9 +34,9 @@ def get_post():
                     EqReservations.start_date < eq_res_form.end_date.data,
                     EqReservations.end_date > eq_res_form.start_date.data
                 )
-            )).all()
+            )).count()
 
-            if reservations:
+            if reservations > 0:
                 reserved = True
 
         if not eq:
