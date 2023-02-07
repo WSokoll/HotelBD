@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, IntegerField, DateField
+from wtforms import StringField, SelectField, IntegerField, DateField, TimeField
 from wtforms.validators import InputRequired, Length, Regexp, Email, NumberRange
 
 from app.validators import AfterStartValidator, NotPastValidator
@@ -29,4 +29,6 @@ class EquipmentReservationForm(FlaskForm):
     eq_category = SelectField('Category', validators=[InputRequired()], choices=[])
     eq_name = SelectField('Equipment', validators=[InputRequired()], choices=[])
     start_date = DateField('Start date', validators=[InputRequired(), NotPastValidator()])
+    start_date_hour = TimeField('Start hour', validators=[InputRequired()])
     end_date = DateField('End date', validators=[InputRequired(), AfterStartValidator(), NotPastValidator()])
+    end_date_hour = TimeField('End hour', validators=[InputRequired()])

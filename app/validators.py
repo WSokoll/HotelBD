@@ -4,7 +4,7 @@ from wtforms import ValidationError
 
 
 class AfterStartValidator:
-    """Validates that end date is after start date.
+    """Validates that end date is after start date (also includes hour fields).
     :param message: error message
      """
 
@@ -12,7 +12,11 @@ class AfterStartValidator:
         self.message = message
 
     def __call__(self, form, field):
-        if field.data <= form.start_date.data:
+        if datetime.combine(field.data, form.end_date_hour.data) <=\
+                datetime.combine(form.start_date.data, form.start_date_hour.data):
+            print(datetime.combine(field.data, form.end_date_hour.data))
+            print(datetime.combine(form.start_date.data, form.start_date_hour.data))
+
             raise ValidationError(
                 self.message
                 or field.gettext(

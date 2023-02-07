@@ -37,9 +37,9 @@ def get():
 
             res_element = {
                 'equipment': equipment.name,
-                'start_date': datetime.strftime(res.start_date, '%Y-%m-%d'),
-                'end_date': datetime.strftime(res.end_date, '%Y-%m-%d'),
-                'price': equipment.cost_per_hour * (res.end_date - res.start_date).days * 24
+                'start_date': res.start_date,
+                'end_date': res.end_date,
+                'price': equipment.cost_per_hour * ((res.end_date - res.start_date).seconds//3600)
             }
             eq_res_list.append(res_element)
 

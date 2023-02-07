@@ -18,19 +18,30 @@
 
           <div class="form-floating mb-3">
             {{ eq_res_form.eq_name(class_="form-control", id_="eq_name") }}
-            <label for="floatingPassword">Equipment</label>
+            <label for="floatingInput">Equipment</label>
           </div>
 
-          <div class="form-floating mb-3">
-            {{ eq_res_form.start_date(class_="form-control") }}
-            <label for="floatingPassword">Start date</label>
+          <div class="row">
+            <div class="col-8 form-floating mb-3">
+              {{ eq_res_form.start_date(class_="form-control") }}
+              <label style="margin-left: 15px" for="floatingInput">Start date</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              {{ eq_res_form.start_date_hour(class_="form-control") }}
+              <label style="margin-left: 15px" for="floatingInput">Start hour</label>
+            </div>
           </div>
 
-          <div class="form-floating mb-3">
-            {{ eq_res_form.end_date(class_="form-control") }}
-            <label for="floatingPassword">End date</label>
+          <div class="row">
+            <div class="col-8 form-floating mb-3">
+              {{ eq_res_form.end_date(class_="form-control") }}
+              <label style="margin-left: 15px" for="floatingInput">End date</label>
+            </div>
+            <div class="col-4 form-floating mb-3">
+              {{ eq_res_form.end_date_hour(class_="form-control") }}
+              <label style="margin-left: 15px" for="floatingInput">End hour</label>
+            </div>
           </div>
-
           <button type="submit" class="btn btn-lg btn-primary mt-4 mb-2">Make a reservation</button>
         </form>
       </div>

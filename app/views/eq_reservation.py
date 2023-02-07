@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Blueprint, abort, flash, render_template, redirect, url_for, jsonify
 from flask_login import current_user, login_required
 from sqlalchemy import and_
@@ -24,6 +26,24 @@ def get_post():
     eq_res_form.eq_name.choices = [eq.name for eq in eq_list]
 
     if eq_res_form.validate_on_submit():
+        # Merge date and hour
+        start_date = eq_res_form.start_date.data
+        start_hour = eq_res_form.start_date_hour.data
+        end_date = eq_res_form.end_date.data
+        end_hour = eq_res_form.end_date_hour.data
+
+        start = datetime.datetime.combine(start_date, start_hour)
+        end = datetime.datetime.combine(end_date, end_hour)
+
+        start = start - datetime.timedelta(minutes=start_hour.minute)
+
+        if end_hour.minute != 0:
+            if end_hour.hour == 23:
+                end = end - datetime.timedelta(hours=end_hour.hour, minutes=end_hour.minute)
+                end = end + datetime.timedelta(days=1)
+            else:
+                end = end + datetime.timedelta(minutes=(60 - end_hour.minute))
+
         # check other reservations
         eq = Equipment.query.filter_by(name=eq_res_form.eq_name.data).one_or_none()
         reserved = False
@@ -31,8 +51,8 @@ def get_post():
             reservations = EqReservations.query.filter(and_(
                 EqReservations.equipment_id == eq.id,
                 and_(
-                    EqReservations.start_date < eq_res_form.end_date.data,
-                    EqReservations.end_date > eq_res_form.start_date.data
+                    EqReservations.start_date < end,
+                    EqReservations.end_date > start
                 )
             )).count()
 
@@ -47,8 +67,8 @@ def get_post():
             eq_reservation = EqReservations(
                 equipment_id=eq.id,
                 guest_id=current_user.id,
-                start_date=eq_res_form.start_date.data,
-                end_date=eq_res_form.end_date.data
+                start_date=start,
+                end_date=end
             )
             db.session.add(eq_reservation)
             db.session.commit()
