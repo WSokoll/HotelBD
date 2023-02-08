@@ -1,61 +1,83 @@
-CREATE OR ALTER TABLE guests (id serial primary key, 
-                    first_name varchar(255) NOT NULL CONSTRAINT proper_letters CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
-                    last_name varchar(255) NOT NULL CONSTRAINT proper_letters CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
-                    age int4 NOT NULL CONSTRAINT proper_age CHECK (age ~ '[1-125]'),
-                    tel_number varchar(13) UNIQUE NOT NULL CONSTRAINT proper_tel CHECK (tel_number ~ '^[0-9]{11}$'),
-                    email varchar(100) UNIQUE NOT NULL CONSTRAINT proper_email CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'));
+CREATE TABLE guests (id serial primary key, 
+                    first_name varchar(255) NOT NULL,
+                    last_name varchar(255) NOT NULL,
+                    age int4 NOT NULL,
+                    tel_number varchar(13) UNIQUE NOT NULL,
+                    email varchar(100) UNIQUE NOT NULL,
+                    CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$' AND last_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
+                    CHECK (age BETWEEN 1 AND 120),
+                    CHECK (tel_number ~ '^[0-9]{11}$'),
+                    CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'));
 
-CREATE OR ALTER TABLE rooms (id serial primary key,
+CREATE TABLE rooms (id serial primary key,
                     number int4 UNIQUE NOT NULL,
                     description text,
-                    capacity int4 NOT NULL CONSTRAINT proper_number CHECK (capacity ~ '[1-10]'),
-                    price_per_day int4 NOT NULL);
+                    capacity int4 NOT NULL,
+                    price_per_day int4 NOT NULL,
+                    CHECK (capacity BETWEEN 1 AND 10));
 
-CREATE OR ALTER TABLE room_reservations (id serial primary key,
-                                guest_id int4 references guests(id) NOT NULL,
-                                room_id int4 references rooms(id) NOT NULL,
-                                start_date timestamp NOT NULL,
-                                end_date timestamp NOT NULL,
-                                num_of_people int4 NOT NULL CONSTRAINT proper_number CHECK (num_of_people ~ '[1-10]'));
+CREATE TABLE room_reservations (
+                    id serial primary key,
+                    start_date timestamp NOT NULL,
+                    end_date timestamp NOT NULL,
+                    num_of_people int4 NOT NULL,
+                    guest_id int4 NOT NULL,
+                    room_id int4 NOT NULL,
+                    CHECK (num_of_people BETWEEN 1 AND 10),
+                    FOREIGN KEY (guest_id) REFERENCES guests (id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY (room_id) REFERENCES rooms (id) ON UPDATE CASCADE ON DELETE RESTRICT
+);
 
-CREATE OR ALTER TABLE eq_categories (id serial primary key,
+
+CREATE TABLE eq_categories (id serial primary key,
                             name varchar(100) UNIQUE NOT NULL,
                             description text);
 
-CREATE OR ALTER TABLE equipment (id serial primary key,
-                        cat_id int4 references eq_categories(id) NOT NULL,
+CREATE TABLE equipment (id serial primary key,
+                        cat_id int4 NOT NULL,
                         name varchar(100) NOT NULL,
                         description text,
-                        cost_per_hour int4 NOT NULL);
+                        cost_per_hour int4 NOT NULL,
+                        FOREIGN KEY (cat_id) REFERENCES eq_categories(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-CREATE OR ALTER TABLE eq_reservations (id serial primary key,
-                              equipment_id int4 references equipment(id) NOT NULL,
-                              guest_id int4 references guests(id) NOT NULL,
+CREATE TABLE eq_reservations (id serial primary key,
+                              equipment_id int4 NOT NULL,
+                              guest_id int4 NOT NULL,
                               start_date timestamp NOT NULL,
-                              end_date timestamp NOT NULL);
+                              end_date timestamp NOT NULL,
+                              FOREIGN KEY (equipment_id) REFERENCES equipment(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                              FOREIGN KEY (guest_id) REFERENCES guests(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-CREATE OR ALTER TABLE employees (id serial primary key,
-                        first_name varchar(255) NOT NULL CONSTRAINT proper_letters CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
-                        last_name varchar(255) NOT NULL CONSTRAINT proper_letters CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
-                        tel_number varchar(13) UNIQUE NOT NULL CONSTRAINT proper_tel CHECK (tel_number ~ '^[0-9]{11}$'),
-                        email varchar(100) UNIQUE NOT NULL CONSTRAINT proper_email CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
-                        position_id int references positions(id) NOT NULL);
+CREATE TABLE employees (id serial primary key,
+                        first_name varchar(255) NOT NULL,
+                        last_name varchar(255) NOT NULL,
+                        tel_number varchar(13) UNIQUE NOT NULL,
+                        email varchar(100) UNIQUE NOT NULL,
+                        position_id int NOT NULL,
+                        CHECK (first_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$' AND last_name ~ '^[A-Za-ząćęłńóśźżĄĆĘŁŃÓŚŹŻ]+$'),
+                        CHECK (tel_number ~ '^[0-9]{11}$'),
+                        CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
+                        FOREIGN KEY (position_id) REFERENCES positions(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-CREATE OR ALTER TABLE positions (id serial primary key,
+CREATE TABLE positions (id serial primary key,
                         name varchar(100) UNIQUE NOT NULL,
                         description text,
                         salary int4 NOT NULL);
 
-CREATE OR ALTER TABLE tasks (id serial primary key,
-                    employee_id int4 references employees(id) NOT NULL,
-                    room_id int4 references rooms(id) NOT NULL,
+CREATE TABLE tasks (id serial primary key,
+                    employee_id int4 NOT NULL,
+                    room_id int4 NOT NULL,
                     name varchar(100) NOT NULL,
-                    description text);
+                    description text,
+                    FOREIGN KEY (employee_id) REFERENCES employees(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY (room_id) REFERENCES rooms(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-CREATE OR ALTER TABLE users (login varchar(255) UNIQUE NOT NULL,
+CREATE TABLE users (login varchar(255) UNIQUE NOT NULL,
                     password varchar(255) NOT NULL,
-                    guest_id int4 references guests(id),
-                    employee_id int4 references employees(id));
+                    guest_id int4,
+                    employee_id int4,
+                    FOREIGN KEY (guest_id) REFERENCES guests(id) ON UPDATE CASCADE ON DELETE RESTRICT,
+                    FOREIGN KEY (employee_id) REFERENCES employees(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
 
 
