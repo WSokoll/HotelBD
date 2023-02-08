@@ -2,6 +2,7 @@ venv
 __pycache__
 .idea
 local/config.local.py
-
+.venv
 local/*
 !local/.gitkeep
+.vscode
