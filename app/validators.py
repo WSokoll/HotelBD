@@ -12,17 +12,23 @@ class AfterStartValidator:
         self.message = message
 
     def __call__(self, form, field):
-        if datetime.combine(field.data, form.end_date_hour.data) <=\
-                datetime.combine(form.start_date.data, form.start_date_hour.data):
-            print(datetime.combine(field.data, form.end_date_hour.data))
-            print(datetime.combine(form.start_date.data, form.start_date_hour.data))
-
-            raise ValidationError(
-                self.message
-                or field.gettext(
-                    "The end date should be after start date."
+        if hasattr(form, 'start_date_hour') and hasattr(form, 'end_date_hour'):
+            if datetime.combine(field.data, form.end_date_hour.data) <=\
+                    datetime.combine(form.start_date.data, form.start_date_hour.data):
+                raise ValidationError(
+                    self.message
+                    or field.gettext(
+                        "The end date should be after start date."
+                    )
                 )
-            )
+        else:
+            if field.data <= form.start_date.data:
+                raise ValidationError(
+                    self.message
+                    or field.gettext(
+                        "The end date should be after start date."
+                    )
+                )
 
 
 class NotPastValidator:
