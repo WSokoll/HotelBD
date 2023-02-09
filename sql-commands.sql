@@ -1,4 +1,5 @@
-CREATE TABLE guests (id serial primary key, 
+DROP TABLE IF EXISTS guests CASCADE;
+CREATE TABLE guests (id serial primary key,
                     first_name varchar(255) NOT NULL,
                     last_name varchar(255) NOT NULL,
                     age int4 NOT NULL,
@@ -9,6 +10,7 @@ CREATE TABLE guests (id serial primary key,
                     CHECK (tel_number ~ '^[0-9]{11}$'),
                     CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'));
 
+DROP TABLE IF EXISTS rooms CASCADE;
 CREATE TABLE rooms (id serial primary key,
                     number int4 UNIQUE NOT NULL,
                     description text,
@@ -16,6 +18,7 @@ CREATE TABLE rooms (id serial primary key,
                     price_per_day int4 NOT NULL,
                     CHECK (capacity BETWEEN 1 AND 10));
 
+DROP TABLE IF EXISTS room_reservations CASCADE;
 CREATE TABLE room_reservations (
                     id serial primary key,
                     start_date timestamp NOT NULL,
@@ -25,14 +28,14 @@ CREATE TABLE room_reservations (
                     room_id int4 NOT NULL,
                     CHECK (num_of_people BETWEEN 1 AND 10),
                     FOREIGN KEY (guest_id) REFERENCES guests (id) ON UPDATE CASCADE ON DELETE RESTRICT,
-                    FOREIGN KEY (room_id) REFERENCES rooms (id) ON UPDATE CASCADE ON DELETE RESTRICT
-);
+                    FOREIGN KEY (room_id) REFERENCES rooms (id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-
+DROP TABLE IF EXISTS eq_categories CASCADE;
 CREATE TABLE eq_categories (id serial primary key,
                             name varchar(100) UNIQUE NOT NULL,
                             description text);
 
+DROP TABLE IF EXISTS equipment CASCADE;
 CREATE TABLE equipment (id serial primary key,
                         cat_id int4 NOT NULL,
                         name varchar(100) NOT NULL,
@@ -40,6 +43,7 @@ CREATE TABLE equipment (id serial primary key,
                         cost_per_hour int4 NOT NULL,
                         FOREIGN KEY (cat_id) REFERENCES eq_categories(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
+DROP TABLE IF EXISTS eq_reservations CASCADE;
 CREATE TABLE eq_reservations (id serial primary key,
                               equipment_id int4 NOT NULL,
                               guest_id int4 NOT NULL,
@@ -48,6 +52,13 @@ CREATE TABLE eq_reservations (id serial primary key,
                               FOREIGN KEY (equipment_id) REFERENCES equipment(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                               FOREIGN KEY (guest_id) REFERENCES guests(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
+DROP TABLE IF EXISTS positions CASCADE;
+CREATE TABLE positions (id serial primary key,
+                        name varchar(100) UNIQUE NOT NULL,
+                        description text,
+                        salary int4 NOT NULL);
+
+DROP TABLE IF EXISTS employees CASCADE;
 CREATE TABLE employees (id serial primary key,
                         first_name varchar(255) NOT NULL,
                         last_name varchar(255) NOT NULL,
@@ -59,11 +70,7 @@ CREATE TABLE employees (id serial primary key,
                         CHECK (email ~ '^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+[.][A-Za-z]+$'),
                         FOREIGN KEY (position_id) REFERENCES positions(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
-CREATE TABLE positions (id serial primary key,
-                        name varchar(100) UNIQUE NOT NULL,
-                        description text,
-                        salary int4 NOT NULL);
-
+DROP TABLE IF EXISTS tasks CASCADE;
 CREATE TABLE tasks (id serial primary key,
                     employee_id int4 NOT NULL,
                     room_id int4 NOT NULL,
@@ -72,10 +79,13 @@ CREATE TABLE tasks (id serial primary key,
                     FOREIGN KEY (employee_id) REFERENCES employees(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                     FOREIGN KEY (room_id) REFERENCES rooms(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (login varchar(255) UNIQUE NOT NULL,
                     password varchar(255) NOT NULL,
                     guest_id int4,
                     employee_id int4,
+                    id serial PRIMARY KEY,
+                    is_active BOOLEAN NOT NULL,
                     FOREIGN KEY (guest_id) REFERENCES guests(id) ON UPDATE CASCADE ON DELETE RESTRICT,
                     FOREIGN KEY (employee_id) REFERENCES employees(id) ON UPDATE CASCADE ON DELETE RESTRICT);
 
