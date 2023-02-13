@@ -119,8 +119,8 @@ declare
 begin
     IF NEW.room_id IN (select room_id from room_reservations) THEN
         FOR temprow IN SELECT * FROM room_reservations where room_id = NEW.room_id LOOP
-            tmp_s_date = (select start_date from temprow);
-            tmp_e_date = (select end_date from temprow);
+            tmp_s_date = temprow.start_date;
+            tmp_e_date = temprow.end_date;
             IF NEW.end_date > tmp_s_date AND NEW.start_date < tmp_e_date THEN
                 raise notice '' Pokoj jest juz zarezerwowany w wybranym terminie '';
                 return NULL;
@@ -145,8 +145,8 @@ declare
 begin
     IF NEW.equipment_id IN (select equipment_id from eq_reservations) THEN
         FOR temprow IN SELECT * FROM eq_reservations where equipment_id = NEW.equipment_id LOOP
-            tmp_s_date = (select start_date from temprow);
-            tmp_e_date = (select end_date from temprow);
+            tmp_s_date = temprow.start_date;
+            tmp_e_date = temprow.end_date;
             IF NEW.end_date > tmp_s_date AND NEW.start_date < tmp_e_date THEN
                 raise notice '' Ekwipunek jest juz zarezerwowany w wybranym terminie '';
                 return NULL;
