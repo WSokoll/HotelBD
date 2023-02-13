@@ -159,3 +159,26 @@ end;
 
 CREATE TRIGGER check_item_t BEFORE INSERT ON eq_reservations FOR EACH ROW EXECUTE PROCEDURE check_item();
 
+CREATE VIEW show_room_reservations AS 
+select rr.id, rr.start_date as "Poczatek rezerwacji", 
+rr.end_date as "Koniec rezerwacji", 
+r.number as "Numer pokoju", 
+g.first_name as "Imie", 
+g.last_name as "Nazwisko", 
+g.tel_number as "Numer telefonu", 
+g.email from room_reservations rr, 
+guests g, 
+rooms r 
+where rr.guest_id=g.id and r.id = rr.room_id;
+
+CREATE VIEW show_eq_reservations AS 
+select er.id, er.start_date as "Poczatek rezerwacji", 
+er.end_date as "Koniec rezerwacji", 
+e.name as "Nazwa sprzętu", 
+g.first_name as "Imie", 
+g.last_name as "Nazwisko", 
+g.tel_number as "Numer telefonu", 
+g.email from eq_reservations er, 
+guests g, 
+equipment e 
+where er.guest_id=g.id and e.id = er.equipment_id;
