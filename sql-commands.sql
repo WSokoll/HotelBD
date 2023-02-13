@@ -113,16 +113,19 @@ CREATE TRIGGER check_date_t BEFORE INSERT ON room_reservations FOR EACH ROW EXEC
 
 CREATE OR REPLACE FUNCTION check_room() RETURNS trigger as '
 declare
+    temprow RECORD;
     tmp_s_date date;
     tmp_e_date date;
 begin
     IF NEW.room_id IN (select room_id from room_reservations) THEN
-        tmp_s_date = (select start_date from room_reservations where room_id=NEW.room_id);
-        tmp_e_date = (select end_date from room_reservations where room_id=NEW.room_id);
-        IF NEW.end_date > tmp_s_date AND NEW.start_date < tmp_e_date THEN
-            raise notice '' Pokoj jest juz zarezerwowany w wybranym terminie '';
-            return NULL;
-        END IF;
+        FOR temprow IN SELECT * FROM room_reservations where room_id = NEW.room_id LOOP
+            tmp_s_date = (select start_date from temprow);
+            tmp_e_date = (select end_date from temprow);
+            IF NEW.end_date > tmp_s_date AND NEW.start_date < tmp_e_date THEN
+                raise notice '' Pokoj jest juz zarezerwowany w wybranym terminie '';
+                return NULL;
+            END IF;
+        END LOOP;
     END IF;
     IF NEW.num_of_people > (select capacity from rooms where id = NEW.room_id) THEN
         raise notice '' Za duza ilosc osob na ten pokoj '';
@@ -133,3 +136,26 @@ end;
 ' language 'plpgsql';
 
 CREATE TRIGGER check_room_t BEFORE INSERT ON room_reservations FOR EACH ROW EXECUTE PROCEDURE check_room();
+
+CREATE OR REPLACE FUNCTION check_item() RETURNS trigger as '
+declare
+    temprow RECORD;
+    tmp_s_date date;
+    tmp_e_date date;
+begin
+    IF NEW.equipment_id IN (select equipment_id from eq_reservations) THEN
+        FOR temprow IN SELECT * FROM eq_reservations where equipment_id = NEW.equipment_id LOOP
+            tmp_s_date = (select start_date from temprow);
+            tmp_e_date = (select end_date from temprow);
+            IF NEW.end_date > tmp_s_date AND NEW.start_date < tmp_e_date THEN
+                raise notice '' Ekwipunek jest juz zarezerwowany w wybranym terminie '';
+                return NULL;
+            END IF;
+        END LOOP;
+    END IF;
+    return NEW;
+end;
+' language 'plpgsql';
+
+CREATE TRIGGER check_item_t BEFORE INSERT ON eq_reservations FOR EACH ROW EXECUTE PROCEDURE check_item();
+
